@@ -46,9 +46,10 @@
     "Repository.Attach.Sources": "false",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/ashan/IdeaProjects/OOP CW",
+    "last_opened_file_path": "C:/Users/ashan/IdeaProjects/OOP_CW",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -91,6 +92,7 @@
       <workItem from="1733188008240" duration="1679000" />
       <workItem from="1733189703204" duration="41000" />
       <workItem from="1733189843327" duration="179000" />
+      <workItem from="1733190062276" duration="204000" />
     </task>
     <task id="LOCAL-00001" summary="Updated RecommendationEngine">
       <option name="closed" value="true" />
@@ -124,7 +126,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733189457902</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Better UI">
+      <option name="closed" value="true" />
+      <created>1733190254619</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1733190254619</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
