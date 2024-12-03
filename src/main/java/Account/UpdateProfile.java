@@ -10,9 +10,6 @@ import java.util.Scanner;
 public class UpdateProfile {
     User user;
 
-    public UpdateProfile() {
-    }
-
     public void viewProfile(User user) {
         this.user = user;
         Scanner scanner = new Scanner(System.in);

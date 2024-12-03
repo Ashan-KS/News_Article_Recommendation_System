@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,7 +16,6 @@ public class Server {
 
     public static void main(String[] args) {
         final int PORT = 12345; // Port for the server
-        final int THREAD_POOL_SIZE = 10; // Number of threads in the thread pool
 
         User user = null;
 
@@ -24,11 +23,14 @@ public class Server {
 
         // Initialize database and create table if it doesn't exist
         Database.UsersTableMaker();
+        Database.removeIncompleteUsers();
         Database.PreferenceTableMaker();
         Database.ArticlesTableMaker();
         ArticleCategorizer categorizer = new ArticleCategorizer();
         categorizer.Categorize();
-        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+
+        // Create a cached thread pool which creates threads as needed
+        ExecutorService executorService = Executors.newCachedThreadPool();
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Server started on port " + PORT + ". Waiting for clients...");
@@ -46,6 +48,7 @@ public class Server {
             executorService.shutdown();
         }
     }
+
     private static void handleClient(Socket clientSocket) {
         // Only log the connection and ensure the connection is kept open until the client disconnects
         try (BufferedReader clientInput = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {

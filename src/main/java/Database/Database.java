@@ -16,10 +16,10 @@ public class Database {
         String url = "jdbc:sqlite:articles.db";
         String createTableSQL = "CREATE TABLE IF NOT EXISTS users (" +
                 "userID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "loginType TEXT NOT NULL," +
+                "loginType TEXT," +
                 "email TEXT NOT NULL UNIQUE," +
-                "password TEXT NOT NULL," +
-                "username TEXT NOT NULL)";
+                "password TEXT," +
+                "username TEXT)";
 
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement()) {
@@ -49,10 +49,35 @@ public class Database {
              Statement stmt = conn.createStatement()) {
 
             stmt.execute(createTableSQL);
-            System.out.println("Preference table created successfully.");
 
         } catch (SQLException e) {
             System.err.println("Database setup failed: " + e.getMessage());
+        }
+    }
+
+    public static void removeIncompleteUsers() {
+        String url = "jdbc:sqlite:articles.db";
+        String selectQuery = "SELECT userID FROM users WHERE " +
+                "loginType = '' OR email = '' OR password = '' OR username = ''";
+        String deleteQuery = "DELETE FROM users WHERE userID = ?";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(selectQuery)) {
+
+            // Check and delete incomplete users
+            while (rs.next()) {
+                int userID = rs.getInt("userID");
+
+                // Delete the record with the specified userID
+                try (PreparedStatement pstmt = conn.prepareStatement(deleteQuery)) {
+                    pstmt.setInt(1, userID);
+                    pstmt.executeUpdate();
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error while searching and deleting incomplete records: " + e.getMessage());
         }
     }
 

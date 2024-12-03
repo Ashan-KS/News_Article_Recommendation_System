@@ -6,12 +6,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Login {
     private User user;
 
     public User getUser() {
         return this.user;
+    }
+
+    public static boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+        return Pattern.compile(emailRegex).matcher(email).matches();
     }
 
     public Login() {
@@ -24,6 +30,13 @@ public class Login {
         while (true) {
             System.out.print("\n     - Enter email: ");
             String email = scanner.nextLine().strip();
+
+            // Validate the email format
+            if (!isValidEmail(email)) {
+                System.out.println("       Invalid email format. Please enter a valid email.");
+                continue; // Skip to the next iteration to prompt for the email again
+            }
+
             String query = "SELECT userID, password, username, loginType FROM users WHERE email = ?";
 
             try (Connection conn = DriverManager.getConnection(url);
