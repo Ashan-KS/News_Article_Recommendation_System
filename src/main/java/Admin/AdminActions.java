@@ -7,7 +7,7 @@ import Article.ArticleCategorizer;
 import java.sql.*;
 import java.util.Scanner;
 
-public class Admin {
+public class AdminActions {
 
     private User user;
     private static final Scanner scanner;

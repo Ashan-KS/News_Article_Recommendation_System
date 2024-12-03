@@ -20,25 +20,19 @@ public class RecommendationEngine {
         for (Article article : articles) {
             plainText.append("Title: ").append(article.getHeadline()).append("\n");
             plainText.append("Description: ").append(article.getDescription()).append("\n\n");
+            plainText.append("Category: ").append(article.getCategory()).append("\n\n");
             plainText.append("Rating: ").append(article.ratingString()).append("\n\n");
+            plainText.append("Url: ").append(article.getUrl()).append("\n\n");
         }
         return plainText.toString().trim(); // Remove trailing newline
     }
     public void setArticlesInput(List<Article> articlesInput) {
         this.articlesInput = articlesInput;
     }
-
-    public List<Article> getArticlesInput() {
-        return this.articlesInput;
-    }
-
     public void setUserHistory(List<Article> userHistory) {
         this.userHistory = userHistory;
     }
 
-    public List<Article> getUserHistory() {
-        return this.userHistory;
-    }
     public void Recommend() throws IOException {
         String modelName = "llama3.2";
 
@@ -47,16 +41,12 @@ public class RecommendationEngine {
         String preferencesPlainText = articlesToPlainText(userHistory);
 
         // Construct the prompt with clear output formatting instructions
+        // Construct the prompt
         String promptText = String.format(
                 "Given the following dataset of articles:\n%s\n\nand the following articles that the user has already read:\n%s\n\n"
-                        + "Find the top 5 articles from the dataset that have the highest similarity to the user read articles. Take the ratings of each article when determining the output as well. "
-                        + "Only show similar articles to the articles that the user has liked. "
-                        + "Output the result in descending order of similarity, following this strict format:\n"
-                        + "1. \"<Article Title>\" - <Similarity Score>\n"
-                        + "2. \"<Article Title>\" - <Similarity Score>\n"
-                        + "3. \"<Article Title>\" - <Similarity Score>\n"
-                        + "4. \"<Article Title>\" - <Similarity Score>\n"
-                        + "5. \"<Article Title>\" - <Similarity Score>\n"
+                        + "Find the top 5 articles from the dataset that have the highest similarity to the articles the user has liked."
+                        + "Output the result in descending order of similarity (similarity should be between 0 to 1), plus, output the url of each these fives articles as well, following this strict format:\n"
+                        + "\"<Article Title>\" - <Similarity Score> - \"<Article url>\n"
                         + "No explanation is needed, and no notes on why the output is generated are required.",
                 datasetPlainText, preferencesPlainText
         );
@@ -84,7 +74,7 @@ public class RecommendationEngine {
 
         // Check response code
         int responseCode = conn.getResponseCode();
-        System.out.println("Response Code: " + responseCode);
+        System.out.println("Response Code: \n" + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             // Read successful response
@@ -99,7 +89,7 @@ public class RecommendationEngine {
                 // Parse JSON response
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 String responseText = jsonResponse.getString("response");
-                System.out.println("Response: " + responseText);
+                System.out.println("Response: \n" + responseText);
             }
         } else {
             // Handle non-200 responses (e.g., 400)

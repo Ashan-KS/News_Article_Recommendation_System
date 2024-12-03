@@ -34,7 +34,7 @@ public class FetchArticles {
                 int id = rs.getInt("articleID");
 
                 Article article = new Article(headline, desc, authors, category, link, date, id);
-                Article articleInput = new Article(headline, desc, category, 0);
+                Article articleInput = new Article(headline, desc, category, 0, url);
 
                 this.articles.add(article);
                 this.articlesInput.add(articleInput);

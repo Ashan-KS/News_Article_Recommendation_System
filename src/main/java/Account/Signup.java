@@ -2,6 +2,7 @@ package Account;
 
 import java.sql.*;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Signup {
     private User user;
@@ -12,6 +13,11 @@ public class Signup {
 
     public User getUser() {
         return this.user;
+    }
+
+    public static boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+        return Pattern.compile(emailRegex).matcher(email).matches();
     }
 
     public Signup() {
@@ -25,6 +31,13 @@ public class Signup {
         while (true) {
             System.out.print("     - Enter email: ");
             email = scanner.nextLine().strip();
+
+            if (!isValidEmail(email)) {
+                System.out.println("Invalid email format. Please enter a valid email.");
+                continue;
+            }
+
+            this.insertEmail(email);
 
             String checkEmailQuery = "SELECT 1 FROM users WHERE email = ?";
             try (Connection conn = DriverManager.getConnection(dbUrl);
@@ -50,35 +63,28 @@ public class Signup {
         String username = scanner.nextLine();
 
         this.user = new User(username, email, password, "User");
-        this.insertUser();
+        UpdateProfile updateProfile = new UpdateProfile();
+        updateProfile.updateUser(this.user.getEmail());
 
         System.out.println("\n                                                     Account Registered Successfully                                                         ");
         System.out.println("=============================================================================================================================================");
         System.out.println("=============================================================================================================================================");
         System.out.println("                                                            Welcome back " + user.getUsername());
     }
-
-    public void insertUser() {
-        String dbUrl = "jdbc:sqlite:articles.db";
+    public void insertEmail(String email) {
+        String url = "jdbc:sqlite:articles.db";
         String insertSQL = "INSERT INTO users (email, password, username, loginType) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = DriverManager.getConnection(dbUrl);
+        try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
 
             conn.setAutoCommit(false);
 
-            pstmt.setString(1, this.user.getEmail());
-            pstmt.setString(2, this.user.getPassword());
-            pstmt.setString(3, this.user.getUsername());
-            pstmt.setString(4, this.user.getLoginType());
+            pstmt.setString(1, email);
+            pstmt.setString(2, "");
+            pstmt.setString(3, "");
+            pstmt.setString(4, "");
             pstmt.executeUpdate();
-
-            try (ResultSet rs = pstmt.getGeneratedKeys()) {
-                if (rs.next()) {
-                    this.user.setId(rs.getInt(1));
-                }
-            }
-
             conn.commit();
         } catch (SQLException e) {
             System.out.println("Error inserting user: " + e.getMessage());

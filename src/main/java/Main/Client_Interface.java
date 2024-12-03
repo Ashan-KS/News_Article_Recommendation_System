@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-import Admin.Admin;
+import Admin.AdminActions;
 import View.View;
 import Account.Login;
 import Account.Signup;
@@ -18,7 +18,7 @@ import Database.Database;
 import RecommendationEngine.RecommendationEngine;
 import java.util.*;
 
-public class Client {
+public class Client_Interface {
     private static final String SERVER_ADDRESS = "localhost"; // Server address (localhost for testing)
     private static final int SERVER_PORT = 12345; // Server port
 
@@ -151,7 +151,7 @@ public class Client {
                         }
                     }
 
-                    Admin admin = new Admin();
+                    AdminActions admin = new AdminActions();
                     admin.setUser(user);
                     // Process the validated choice
                     switch (option) {

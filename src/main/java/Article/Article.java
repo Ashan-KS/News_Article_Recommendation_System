@@ -29,11 +29,12 @@ public class Article {
         this.id = id;
     }
 
-    public Article(String headline, String description, String category, int rating) {
+    public Article(String headline, String description, String category, int rating, String url) {
         this.headline = headline;
         this.description = description;
         this.category = category;
         this.rating = rating;
+        this.url = url;
     }
 
     public Article(String headline, String description, String category) {
