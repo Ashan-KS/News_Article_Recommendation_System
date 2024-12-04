@@ -19,14 +19,13 @@ import RecommendationEngine.RecommendationEngine;
 import java.util.*;
 
 public class Client_Interface {
-    private static final String SERVER_ADDRESS = "localhost"; // Server address (localhost for testing)
-    private static final int SERVER_PORT = 12345; // Server port
+    private static final String SERVER_ADDRESS = "localhost"; // Server address for connection
+    private static final int SERVER_PORT = 12345; // Port to connect to the server
 
     public static void main(String[] args) {
-        User user = null;
-
-        List<Article> articlesInput = null;
-        List<Article> userHistory = null;
+        User user = null; // User object to hold the logged-in user
+        List<Article> articlesInput = null; // List for input articles
+        List<Article> userHistory = null; // List to store user's reading history
 
         Scanner scanner = new Scanner(System.in);
         try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
@@ -35,24 +34,25 @@ public class Client_Interface {
              Scanner serverInput = new Scanner(new InputStreamReader(socket.getInputStream()))) {
 
             System.out.println("Connected to server at " + SERVER_ADDRESS + ":" + SERVER_PORT);
-            // After receiving the greeting message, initialize MenuInterface
-            // This will display the menu
+            // Display the main menu for login or sign-up
             System.out.println("===============================================================================================================================================");
             System.out.println("                                                           News Article Recommendation System                                                 \n");
             System.out.println("     Please Select An Option\n");
             System.out.println("     - 1. Login");
             System.out.println("     - 2. Sign Up");
 
-            boolean loggedIn = false;
-            int choice = 0;
+            boolean loggedIn = false; // Flag to track user login status
+            int choice = 0; // Choice for login or sign-up
+
+            // Validate input for login or sign-up choice
             while (true) {
-                System.out.print("\n     Your Choice: ");
-                String input = scanner.nextLine().strip(); // Take input as a string
+                System.out.print("\n     - Enter Choice: ");
+                String input = scanner.nextLine().strip();
 
                 try {
-                    choice = Integer.parseInt(input); // Attempt to parse the input as an integer
+                    choice = Integer.parseInt(input);
                     if (choice == 1 || choice == 2) {
-                        break; // Exit loop if the choice is valid
+                        break; // Valid input, exit the loop
                     } else {
                         System.out.println("     Invalid choice! Please enter 1 or 2.");
                     }
@@ -61,6 +61,7 @@ public class Client_Interface {
                 }
             }
 
+            // Log in or sign up based on user choice
             if (choice == 1) {
                 Login login = new Login();
                 loggedIn = true;
@@ -71,14 +72,14 @@ public class Client_Interface {
                 user = signup.getUser();
             }
 
-            // Once logged in, show options
+            // Show options for users after logging in
             if (loggedIn && "User".equalsIgnoreCase(user.getLoginType())) {
 
                 FetchArticles fetch = new FetchArticles();
                 List<Article> articles = fetch.fetchAllArticles();
                 articlesInput = fetch.getArticlesInput();
 
-                while (true) { // Outer loop for menu
+                while (true) { // Main menu loop for user options
                     System.out.println("===============================================================================================================================================");
                     System.out.println("\n                                                          --Choose an option--             ");
                     System.out.println("     - 1. View Articles");
@@ -86,50 +87,54 @@ public class Client_Interface {
                     System.out.println("     - 3. View Profile");
                     System.out.println("     - 4. Logout");
 
-                    int option = -1; // Default invalid value for choice
+                    int option = -1; // Placeholder for user choice
 
-                    // Validate if the input is an integer
+                    // Validate input for menu options
                     while (true) {
                         try {
                             System.out.print("\n     - Enter choice: ");
                             String input = scanner.nextLine().strip();
-                            option = Integer.parseInt(input); // Convert the string to an integer
-                            System.out.println("\n");
-                            break; // Exit validation loop on successful input
+                            option = Integer.parseInt(input);
+                            break; // Exit validation loop on valid input
                         } catch (NumberFormatException e) {
                             System.out.println("       Invalid input! Please enter a valid integer (1-4).\n");
                         }
                     }
 
-                    // Process the validated choice
+                    // Process user menu options
                     switch (option) {
                         case 1:
                             View view = new View();
                             view.setUser(user);
-                            view.displayArticles(articles);
+                            view.displayArticles(articles); // Display articles to the user
                             break;
                         case 2:
+                            System.out.println("\n===============================================================================================================================================\n");
+                            System.out.println("     Loading Recommendaions...\n");
                             userHistory = Database.retrievePreferences(user.getId(), articles);
-                            articlesInput.removeAll(userHistory);
+                            articlesInput.removeAll(userHistory); // Exclude articles already in user history
                             RecommendationEngine model = new RecommendationEngine();
                             model.setArticlesInput(articlesInput);
                             model.setUserHistory(userHistory);
-                            model.Recommend();
+                            model.Recommend(); // Generate and display recommendations
+                            System.out.println("\n");
                             break;
                         case 3:
                             UpdateProfile update = new UpdateProfile();
-                            update.viewProfile(user);
+                            update.viewProfile(user); // Display user profile
                             break;
                         case 4:
-                            System.out.println("       Logging out...");
-                            return; // Exit the menu loop and method
+                            System.out.println("\n       Logging out...");
+                            System.out.println("\n===============================================================================================================================================\n");
+                            return; // Exit the user menu
                         default:
                             System.out.println("       Invalid option, please try again.");
                     }
                 }
             }
+            // Admin-specific menu if logged in as admin
             else if (loggedIn && "Admin".equalsIgnoreCase(user.getLoginType())) {
-                while (true){
+                while (true) {
                     System.out.println("===============================================================================================================================================");
                     System.out.println("\n                                                          --Choose an option--             ");
                     System.out.println("     - 1. Add Articles");
@@ -137,15 +142,15 @@ public class Client_Interface {
                     System.out.println("     - 3. Remove Articles");
                     System.out.println("     - 4. Logout");
 
-                    int option = -1; // Default invalid value for choice
+                    int option = -1; // Placeholder for admin choice
 
-                    // Validate if the input is an integer
+                    // Validate input for admin menu options
                     while (true) {
                         try {
                             System.out.print("\n     - Enter choice: ");
                             String input = scanner.nextLine().strip();
-                            option = Integer.parseInt(input); // Convert the string to an integer
-                            break; // Exit validation loop on successful input
+                            option = Integer.parseInt(input);
+                            break; // Exit validation loop on valid input
                         } catch (NumberFormatException e) {
                             System.out.println("       Invalid input! Please enter a valid integer.");
                         }
@@ -153,20 +158,21 @@ public class Client_Interface {
 
                     AdminActions admin = new AdminActions();
                     admin.setUser(user);
-                    // Process the validated choice
+                    // Process admin menu options
                     switch (option) {
                         case 1:
-                            admin.addArticles();
+                            admin.addArticles(); // Admin adds new articles
                             break;
                         case 2:
-                            admin.editArticle();
+                            admin.editArticle(); // Admin edits an existing article
                             break;
                         case 3:
-                            admin.deleteArticle();
+                            admin.deleteArticle(); // Admin deletes an article
                             break;
                         case 4:
-                            System.out.println("       Logging out...");
-                            return; // Exit the menu loop and method
+                            System.out.println("\n       Logging out...");
+                            System.out.println("\n===============================================================================================================================================\n");
+                            return; // Exit the admin menu
                         default:
                             System.out.println("       Invalid option, please try again.");
                     }
@@ -176,7 +182,7 @@ public class Client_Interface {
             scanner.close();
 
         } catch (IOException e) {
-            System.err.println("       Client error: " + e.getMessage());
+            System.err.println("       Client error: " + e.getMessage()); // Handle client-side IO exceptions
         }
     }
 }

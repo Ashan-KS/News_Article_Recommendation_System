@@ -11,32 +11,36 @@ import java.util.regex.Pattern;
 public class Login {
     private User user;
 
+    // Getter method to retrieve the authenticated user object
     public User getUser() {
         return this.user;
     }
 
+    // Validates the format of an email using a regex pattern
     public static boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
         return Pattern.compile(emailRegex).matcher(email).matches();
     }
 
+    // Constructor for handling the login process
     public Login() {
         System.out.println("\n===============================================================================================================================================");
         System.out.println("                                                           Login to Existing Account                                                          ");
 
         Scanner scanner = new Scanner(System.in);
-        String url = "jdbc:sqlite:articles.db";
+        String url = "jdbc:sqlite:articles.db"; // Database connection string
 
         while (true) {
             System.out.print("\n     - Enter email: ");
             String email = scanner.nextLine().strip();
 
-            // Validate the email format
+            // Check if the provided email is valid
             if (!isValidEmail(email)) {
                 System.out.println("       Invalid email format. Please enter a valid email.");
-                continue; // Skip to the next iteration to prompt for the email again
+                continue;
             }
 
+            // Query to find the user based on the provided email
             String query = "SELECT userID, password, username, loginType FROM users WHERE email = ?";
 
             try (Connection conn = DriverManager.getConnection(url);
@@ -44,6 +48,7 @@ public class Login {
 
                 pstmt.setString(1, email);
                 try (ResultSet rs = pstmt.executeQuery()) {
+                    // If a record is found, populate the user object and exit the loop
                     if (rs.next()) {
                         this.user = new User(rs.getString("username"), email, rs.getString("password"), rs.getString("loginType"));
                         this.user.setId(rs.getInt("userID"));
@@ -59,29 +64,36 @@ public class Login {
 
         String loginType;
 
-        while(true) {
+        while (true) {
             System.out.print("     - Enter password: ");
             loginType = scanner.nextLine().strip();
+
+            // Check if the entered password matches the user's password
             if (loginType.equals(this.user.getPassword())) {
-                while(true) {
+                while (true) {
                     System.out.print("     - Select login type (User/Admin): ");
                     loginType = scanner.nextLine().strip();
+
+                    // Validate login type input
                     if (!loginType.equalsIgnoreCase("User") && !loginType.equalsIgnoreCase("Admin")) {
                         System.out.println("       Invalid login type. Please enter either 'User' or 'Admin'.\n");
                     }
+                    // Ensure admin access is allowed only for admin accounts
                     else if (!loginType.equalsIgnoreCase("Admin") || !"User".equalsIgnoreCase(this.user.getLoginType())) {
                         this.user.setLoginType(loginType);
                         break;
-                    }
-                    else {
+                    } else {
                         System.out.println("       Access denied. Admin privileges are unavailable. Please log in as a user.\n");
                     }
                 }
 
-                System.out.println("\n=============================================================================================================================================");
+                // Successful login message
+                System.out.println("\n===============================================================================================================================================");
                 System.out.println("                                                            Welcome back " + this.user.getUsername());
                 return;
             }
+
+            // Handle incorrect password input
             System.out.println("       Password Incorrect, Try again\n");
         }
     }

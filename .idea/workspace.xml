@@ -4,17 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4653d9e9-c705-42b6-b053-d3b2168f544b" name="Changes" comment="Server updates">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+    <list default="true" id="4653d9e9-c705-42b6-b053-d3b2168f544b" name="Changes" comment="After Commenting">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ca4d78b9-ca0f-4a9e-839e-a15f3e071da9.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/ca4d78b9-ca0f-4a9e-839e-a15f3e071da9.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/articles.db" beforeDir="false" afterPath="$PROJECT_DIR$/articles.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Account/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Account/Login.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Admin/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Admin/AdminActions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Article/Article.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Article/Article.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Article/FetchArticles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Article/FetchArticles.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Database/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Database/Database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main/Client_Interface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Account/Signup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Account/Signup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Account/UpdateProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Account/UpdateProfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Admin/AdminActions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Admin/AdminActions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Extra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Extra.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main/Client_Interface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main/Client_Interface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/RecommendationEngine/RecommendationEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/RecommendationEngine/RecommendationEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/View/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/View/View.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +48,7 @@
   &quot;keyToString&quot;: {
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;Application.Client.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Client_Interface.executor&quot;: &quot;Run&quot;,
     &quot;Application.Driver.executor&quot;: &quot;Run&quot;,
     &quot;Application.Extra.executor&quot;: &quot;Run&quot;,
     &quot;Application.RecommendationEngine.executor&quot;: &quot;Run&quot;,
@@ -130,6 +132,14 @@
       <workItem from="1733316017380" duration="3315000" />
       <workItem from="1733322791068" duration="1094000" />
       <workItem from="1733333712497" duration="1333000" />
+      <workItem from="1733364988738" duration="6753000" />
+      <workItem from="1733380023864" duration="1936000" />
+      <workItem from="1733382073337" duration="2624000" />
+      <workItem from="1733389435718" duration="5296000" />
+      <workItem from="1733448895374" duration="2325000" />
+      <workItem from="1733451398120" duration="3205000" />
+      <workItem from="1733455320778" duration="4954000" />
+      <workItem from="1733460445405" duration="290000" />
     </task>
     <task id="LOCAL-00001" summary="Updated RecommendationEngine">
       <option name="closed" value="true" />
@@ -179,7 +189,23 @@
       <option name="project" value="LOCAL" />
       <updated>1733211843222</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Client Interface updates">
+      <option name="closed" value="true" />
+      <created>1733352513007</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1733352513007</updated>
+    </task>
+    <task id="LOCAL-00008" summary="After Commenting">
+      <option name="closed" value="true" />
+      <created>1733395363556</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1733395363556</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -232,15 +258,33 @@
     <MESSAGE value="First OOP" />
     <MESSAGE value="Better UI" />
     <MESSAGE value="Server updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="Server updates" />
+    <MESSAGE value="resolving idea.xml" />
+    <MESSAGE value="Client Interface updates" />
+    <MESSAGE value="After Commenting" />
+    <option name="LAST_COMMIT_MESSAGE" value="After Commenting" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/Account/Login.java</url>
-          <line>68</line>
-          <option name="timeStamp" value="1" />
+          <url>file://$PROJECT_DIR$/src/main/java/Database/Database.java</url>
+          <line>287</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/Account/Signup.java</url>
+          <line>35</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/Account/Signup.java</url>
+          <line>60</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/Account/UpdateProfile.java</url>
+          <line>148</line>
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

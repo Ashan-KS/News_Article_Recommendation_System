@@ -185,9 +185,11 @@ public class ArticleCategorizer {
                 "care", "treatment"
         ));
     }};
+    // A list of common stop words to remove during text preprocessing
     private static final List<String> STOP_WORDS = Arrays.asList("the", "is", "at", "which", "on", "a", "an", "of", "and", "in");
 
     // Preprocess text by removing stop words and tokenizing
+// Converts text to lowercase, splits it into tokens, and filters out stop words
     public static List<String> preprocessText(String content) {
         String[] tokens = content.toLowerCase().split("\\W+");
         List<String> processedTokens = new ArrayList<>();
@@ -200,12 +202,13 @@ public class ArticleCategorizer {
         return processedTokens;
     }
 
-    // Categorize the article based on keywords in the headline and short description
+    // Categorize an article based on its headline and short description
+// Uses pre-defined keywords for each category to tally scores and determine the best match
     public static String categorizeArticle(String headline, String shortDescription) {
         String combinedText = headline + " " + shortDescription;
         List<String> tokens = preprocessText(combinedText);
 
-        // Tally matches for each category
+        // Map to store scores for each category based on keyword matches
         Map<String, Integer> categoryScores = new HashMap<>();
         for (String token : tokens) {
             for (Map.Entry<String, List<String>> entry : CATEGORY_KEYWORDS.entrySet()) {
@@ -217,33 +220,34 @@ public class ArticleCategorizer {
             }
         }
 
-        // Find category with the highest score
+        // Return the category with the highest score, or "Uncategorized" if no match is found
         return categoryScores.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
                 .orElse("Uncategorized");
     }
 
+    // Categorize uncategorized articles from the database and update their predicted categories
     public void Categorize() {
         // Database connection details
         String url = "jdbc:sqlite:articles.db"; // Update with your database path
-        String query = "SELECT articleID, headline, description FROM articles WHERE predicted = ''"; // Query to get uncategorized articles
+        String query = "SELECT articleID, headline, description FROM articles WHERE predicted = ''"; // Query to fetch uncategorized articles
         String updateQuery = "UPDATE articles SET predicted = ? WHERE articleID = ?"; // Query to update predicted category
 
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
-            // Prepare update statement
+            // Prepare the update statement to save predicted categories
             try (PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
 
-                // Iterate through each article
+                // Process each article in the result set
                 while (rs.next()) {
                     int articleID = rs.getInt("articleID");
                     String headline = rs.getString("headline");
                     String shortDescription = rs.getString("description");
 
-                    // Categorize article based on headline and short description
+                    // Predict the category for the article
                     String predictedCategory = categorizeArticle(headline, shortDescription);
 
                     // Update the database with the predicted category
@@ -253,7 +257,7 @@ public class ArticleCategorizer {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Log database errors
         }
     }
 }

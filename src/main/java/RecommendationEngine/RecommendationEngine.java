@@ -22,7 +22,6 @@ public class RecommendationEngine {
             plainText.append("Description: ").append(article.getDescription()).append("\n\n");
             plainText.append("Category: ").append(article.getCategory()).append("\n\n");
             plainText.append("Rating: ").append(article.ratingString()).append("\n\n");
-            plainText.append("Url: ").append(article.getUrl()).append("\n\n");
         }
         return plainText.toString().trim(); // Remove trailing newline
     }
@@ -44,9 +43,9 @@ public class RecommendationEngine {
         // Construct the prompt
         String promptText = String.format(
                 "Given the following dataset of articles:\n%s\n\nand the following articles that the user has already read:\n%s\n\n"
-                        + "Find the top 5 articles from the dataset that have the highest similarity to the articles the user has liked."
-                        + "Output the result in descending order of similarity (similarity should be between 0 to 1), plus, output the url of each these fives articles as well, following this strict format:\n"
-                        + "\"<Article Title>\" - <Similarity Score> - \"<Article url>\n"
+                        + "Find the top 5 articles from the dataset that have the highest similarity to the articles the user has liked. Take the article categories of the viewed articles into account."
+                        + "Output the result in descending order of similarity (similarity should be between 0 to 1), strictly follow the below structure\n"
+                        + "\"<Article Title>\" - <Similarity Score>\n"
                         + "No explanation is needed, and no notes on why the output is generated are required.",
                 datasetPlainText, preferencesPlainText
         );
@@ -74,7 +73,6 @@ public class RecommendationEngine {
 
         // Check response code
         int responseCode = conn.getResponseCode();
-        System.out.println("Response Code: \n" + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             // Read successful response
@@ -89,7 +87,7 @@ public class RecommendationEngine {
                 // Parse JSON response
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 String responseText = jsonResponse.getString("response");
-                System.out.println("Response: \n" + responseText);
+                System.out.println(responseText);
             }
         } else {
             // Handle non-200 responses (e.g., 400)

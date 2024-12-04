@@ -7,6 +7,7 @@ public class User {
     private String password;
     private String loginType;
 
+    // Constructor to make an user object
     public User(String username, String email, String password, String loginType) {
         this.username = username;
         this.email = email;

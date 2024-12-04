@@ -15,12 +15,16 @@ public class Database {
 
     private User user = null;
 
+    private static final String url = "jdbc:sqlite:articles.db";
+
+    // Setter method to get the user instance
     public void setUser(User user) {
         this.user = user;
     }
 
+    // Method to create the users table in the database if it doesn't already exist
     public static void UsersTableMaker() {
-        String url = "jdbc:sqlite:articles.db";
+        // SQL statement to create the "users" table with required columns and constraints
         String createTableSQL = "CREATE TABLE IF NOT EXISTS users (" +
                 "userID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "loginType TEXT," +
@@ -30,66 +34,41 @@ public class Database {
 
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement()) {
-
-            // Create the table
+            // Execute the table creation statement
             stmt.execute(createTableSQL);
-
         } catch (SQLException e) {
+            // Handle any errors during database setup
             System.out.println("Database setup failed: " + e.getMessage());
         }
     }
 
+    // Method to create the perferences table to store user-article interactions
     public static void PreferenceTableMaker() {
-        String url = "jdbc:sqlite:articles.db";
+        // SQL statement to create the "preferences" table with foreign keys referencing "users" and "articles" tables
         String createTableSQL = """
-        CREATE TABLE IF NOT EXISTS preferences (
-            userID INTEGER NOT NULL,
-            articleID INTEGER NOT NULL,
-            rating INTEGER NOT NULL,
-            PRIMARY KEY (userID, articleID),
-            FOREIGN KEY (userID) REFERENCES users(userID)ON DELETE CASCADE ON UPDATE CASCADE,
-            FOREIGN KEY (articleID) REFERENCES articles(articleID)ON DELETE CASCADE ON UPDATE CASCADE
-        )
+    CREATE TABLE IF NOT EXISTS preferences (
+        userID INTEGER NOT NULL,
+        articleID INTEGER NOT NULL,
+        rating INTEGER NOT NULL,
+        PRIMARY KEY (userID, articleID),
+        FOREIGN KEY (userID) REFERENCES users(userID) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY (articleID) REFERENCES articles(articleID) ON DELETE CASCADE ON UPDATE CASCADE
+    )
     """;
 
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement()) {
-
+            // Execute the table creation statement
             stmt.execute(createTableSQL);
-
         } catch (SQLException e) {
+            // Handle any errors during database setup
             System.err.println("Database setup failed: " + e.getMessage());
         }
     }
 
-    public static void removeIncompleteUsers() {
-        String url = "jdbc:sqlite:articles.db";
-        String selectQuery = "SELECT userID FROM users WHERE " +
-                "loginType = '' OR email = '' OR password = '' OR username = ''";
-        String deleteQuery = "DELETE FROM users WHERE userID = ?";
-
-        try (Connection conn = DriverManager.getConnection(url);
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(selectQuery)) {
-
-            // Check and delete incomplete users
-            while (rs.next()) {
-                int userID = rs.getInt("userID");
-
-                // Delete the record with the specified userID
-                try (PreparedStatement pstmt = conn.prepareStatement(deleteQuery)) {
-                    pstmt.setInt(1, userID);
-                    pstmt.executeUpdate();
-                }
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Error while searching and deleting incomplete records: " + e.getMessage());
-        }
-    }
-
-    public static void ArticlesTableMaker(){
-        String url = "jdbc:sqlite:articles.db";
+    // Method to create the "articles" table and initialize it with data
+    public static void ArticlesTableMaker() {
+        // SQL statement to create the "articles" table with relevant columns
         String createTableSQL = "CREATE TABLE IF NOT EXISTS articles (" +
                 "articleID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "headline TEXT NOT NULL," +
@@ -102,19 +81,18 @@ public class Database {
 
         try (Connection conn = DriverManager.getConnection(url);
              Statement stmt = conn.createStatement()) {
-
-            // Create the table
+            // Execute the table creation statement
             stmt.execute(createTableSQL);
+            // Call a separate method to populate the articles table
             insertToArticles();
-
         } catch (SQLException e) {
+            // Handle any errors during database setup
             System.out.println("Database setup failed: " + e.getMessage());
         }
     }
 
     public static void insertToArticles() {
         if (isArticleTableEmpty()) {
-            String url = "jdbc:sqlite:articles.db";
             // SQL command to insert data into the articles table
             String insertSQL = "INSERT INTO articles (headline, description, authors, category, predicted, url, date) VALUES (?, ?, ? , ?, ?, ?, ?)";
 
@@ -196,6 +174,32 @@ public class Database {
         }
     }
 
+    // Method to remove users with incomplete data from the "users" table
+    public static void removeIncompleteUsers() {
+        // SQL query to find users with missing or empty fields
+        String selectQuery = "SELECT userID FROM users WHERE " +
+                "loginType = '' OR email = '' OR password = '' OR username = ''";
+        // SQL query to delete a user by their userID
+        String deleteQuery = "DELETE FROM users WHERE userID = ?";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(selectQuery)) {
+            // Loop through results and delete each incomplete user
+            while (rs.next()) {
+                int userID = rs.getInt("userID");
+                try (PreparedStatement pstmt = conn.prepareStatement(deleteQuery)) {
+                    pstmt.setInt(1, userID); // Set userID in the delete query
+                    pstmt.executeUpdate(); // Execute deletion
+                }
+            }
+        } catch (SQLException e) {
+            // Handle errors during the search and delete process
+            System.out.println("Error while searching and deleting incomplete records: " + e.getMessage());
+        }
+    }
+
+    // Method to check if the "articles" table is empty
     public static boolean isArticleTableEmpty() {
         String url = "jdbc:sqlite:articles.db";
         String query = "SELECT COUNT(*) FROM articles";
@@ -205,16 +209,20 @@ public class Database {
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
+            // Check the count of rows in the "articles" table
             if (rs.next()) {
                 int count = rs.getInt(1);
-                isEmpty = (count == 0);
+                isEmpty = (count == 0); // If count is 0, the table is empty
             }
         } catch (Exception e) {
+            // Print the stack trace for debugging purposes
             e.printStackTrace();
         }
-        return isEmpty;
+
+        return isEmpty; // Return whether the table is empty or not
     }
 
+    // Method to update a user's preferences for an article
     public static void updateUserPreferences(int userID, Article article) {
         String url = "jdbc:sqlite:articles.db";
         String insertSQL = "INSERT INTO preferences (userID, articleID, rating) VALUES (?, ?, ?)";
@@ -225,61 +233,65 @@ public class Database {
              PreparedStatement updateStmt = conn.prepareStatement(updateSQL);
              PreparedStatement insertStmt = conn.prepareStatement(insertSQL)) {
 
-            conn.setAutoCommit(false);
+            conn.setAutoCommit(false); // Disable auto-commit for transaction management
 
-            // Check if the preference exists
+            // Check if the preference for this article already exists
             selectStmt.setInt(1, userID);
             selectStmt.setInt(2, article.getId());
             ResultSet rs = selectStmt.executeQuery();
 
             if (rs.next()) {
-                // Update the existing preference
+                // If a preference exists, update its rating
                 updateStmt.setInt(1, article.getRating());
                 updateStmt.setInt(2, userID);
                 updateStmt.setInt(3, article.getId());
                 updateStmt.executeUpdate();
             } else {
-                // Insert a new preference
+                // If no preference exists, insert a new one
                 insertStmt.setInt(1, userID);
                 insertStmt.setInt(2, article.getId());
                 insertStmt.setInt(3, article.getRating());
                 insertStmt.executeUpdate();
             }
 
-            conn.commit();
+            conn.commit(); // Commit the transaction
         } catch (SQLException e) {
+            // Handle any errors during the update process
             System.err.println("Error updating preferences: " + e.getMessage());
         }
     }
 
+    // Method to retrieve a user's preferences and match them to a list of articles
     public static List<Article> retrievePreferences(int userID, List<Article> articles) {
         String url = "jdbc:sqlite:articles.db";
         String querySQL = "SELECT articleID, rating FROM preferences WHERE userID = ?";
-        List<Article> preferences = new ArrayList<>();
+        List<Article> preferences = new ArrayList<>(); // List to store articles with user preferences
 
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(querySQL)) {
 
-            pstmt.setInt(1, userID);
+            pstmt.setInt(1, userID); // Set the userID in the query
             ResultSet rs = pstmt.executeQuery();
 
+            // Loop through the result set to retrieve article preferences
             while (rs.next()) {
                 int articleID = rs.getInt("articleID");
                 int rating = rs.getInt("rating");
 
+                // Match the articleID to an article in the provided list
                 for (Article article : articles) {
                     if (article.getId() == articleID) {
-                        article.setRating(rating);
-                        preferences.add(article);
-                        break;
+                        article.setRating(rating); // Set the rating on the matching article
+                        preferences.add(article); // Add the article to the preferences list
+                        break; // Stop searching once a match is found
                     }
                 }
             }
         } catch (SQLException e) {
+            // Handle any errors during the retrieval process
             System.err.println("Error retrieving preferences: " + e.getMessage());
         }
 
-        return preferences;
+        return preferences; // Return the list of articles with user preferences
     }
-
 }
