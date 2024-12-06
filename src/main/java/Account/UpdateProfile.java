@@ -1,5 +1,7 @@
 package Account;
 
+import Database.Database;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class UpdateProfile {
     private User user;
+    private Database database = new Database();
 
     // Setter to assign a User object
     public void setUser(User user) {
@@ -85,17 +88,17 @@ public class UpdateProfile {
                     String newUsername = scanner.nextLine().strip();
                     this.user.setUsername(newUsername);
                     System.out.println("       Username updated successfully!\n");
-                    this.updateUser(prevEmail);
+                    database.updateUser(prevEmail);
                     break;
                 case "2": // Update email
                     System.out.print("\n     - Enter new email: ");
                     String newEmail = scanner.nextLine().strip();
 
                     if (isValidEmail(newEmail)) {
-                        if (this.isEmailUnique(newEmail)) {
+                        if (database.isEmailUnique(newEmail)) {
                             this.user.setEmail(newEmail);
                             System.out.println("       Email updated successfully!\n");
-                            this.updateUser(prevEmail);
+                            database.updateUser(prevEmail);
                         } else {
                             System.out.println("       Error: This email is already in use. Please try again.\n");
                         }
@@ -111,58 +114,18 @@ public class UpdateProfile {
                         String newPassword = scanner.nextLine();
                         this.user.setPassword(newPassword);
                         System.out.println("       Password updated successfully!\n");
-                        this.updateUser(prevEmail);
+                        database.updateUser(prevEmail);
                     } else {
                         System.out.println("       Error: Incorrect current password. Please try again.\n");
                     }
                     break;
                 case "4": // Exit update menu
-                    this.updateUser(prevEmail);
+                    database.updateUser(prevEmail);
                     System.out.println("       Profile changes saved. Exiting...");
                     return;
                 default:
                     System.out.println("       Invalid choice. Please try again.\n");
             }
-        }
-    }
-
-    // Checks if the new email is unique in the database
-    public boolean isEmailUnique(String newEmail) {
-        String query = "SELECT email FROM users WHERE email = ?";
-        String url = "jdbc:sqlite:articles.db";
-
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-
-            pstmt.setString(1, newEmail);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                return !rs.next(); // Return true if no matching email is found
-            }
-        } catch (SQLException e) {
-            System.out.println("     Error checking email: " + e.getMessage());
-            return false;
-        }
-    }
-
-    // Updates the user's details in the database
-    public void updateUser(String prevEmail) {
-        String url = "jdbc:sqlite:articles.db";
-        String updateQuery = "UPDATE users SET username = ?, email = ?, password = ?, loginType = ? WHERE email = ?";
-
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
-
-            // Bind the updated user details to the query
-            stmt.setString(1, this.user.getUsername());
-            stmt.setString(2, this.user.getEmail());
-            stmt.setString(3, this.user.getPassword());
-            stmt.setString(4, this.user.getLoginType());
-            stmt.setString(5, prevEmail);
-
-            stmt.executeUpdate(); // Execute the update query
-
-        } catch (SQLException e) {
-            System.out.println("     Error updating user: " + e.getMessage());
         }
     }
 }

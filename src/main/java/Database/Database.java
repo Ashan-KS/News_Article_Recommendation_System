@@ -10,12 +10,22 @@ import java.util.ArrayList;
 import java.util.List;
 import Account.User;
 import Article.Article;
+import Article.ArticleCategorizer;
 
 public class Database {
 
     private User user = null;
 
     private static final String url = "jdbc:sqlite:articles.db";
+
+    // Lists to store articles fetched from the database
+    private List<Article> articles = new ArrayList<>();
+    private List<Article> articlesInput = new ArrayList<>();
+
+    // Getter for the list of articles with simplified input data
+    public List<Article> getArticlesInput() {
+        return this.articlesInput;
+    }
 
     // Setter method to get the user instance
     public void setUser(User user) {
@@ -42,11 +52,49 @@ public class Database {
         }
     }
 
+    // Fetch all articles from the database and populate the articles and articlesInput lists
+    public List<Article> fetchAllArticles() {
+
+        String selectSQL = "SELECT * FROM articles"; // SQL query to retrieve all articles
+
+        try (Connection conn = DriverManager.getConnection(url);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(selectSQL)) {
+
+            // Iterate through the result set and create Article objects
+            while (rs.next()) {
+                String headline = rs.getString("headline");
+                String desc = rs.getString("description");
+                String authors = rs.getString("authors");
+                String category = rs.getString("category");
+                String link = rs.getString("url");
+                String date = rs.getString("date");
+                int id = rs.getInt("articleID");
+
+                // Create an Article object with full details
+                Article article = new Article(headline, desc, authors, category, link, date, id);
+
+                // Create a simplified Article object for input processing
+                Article articleInput = new Article(headline, desc, category, 0, url);
+
+                // Add articles to their respective lists
+                this.articles.add(article);
+                this.articlesInput.add(articleInput);
+            }
+
+        } catch (SQLException e) {
+            // Log errors encountered while fetching articles
+            System.out.println("Error fetching articles: " + e.getMessage());
+        }
+
+        return this.articles; // Return the full list of articles
+    }
+
     // Method to create the perferences table to store user-article interactions
     public static void PreferenceTableMaker() {
         // SQL statement to create the "preferences" table with foreign keys referencing "users" and "articles" tables
         String createTableSQL = """
-    CREATE TABLE IF NOT EXISTS preferences (
+        CREATE TABLE IF NOT EXISTS preferences (
         userID INTEGER NOT NULL,
         articleID INTEGER NOT NULL,
         rating INTEGER NOT NULL,
@@ -201,7 +249,7 @@ public class Database {
 
     // Method to check if the "articles" table is empty
     public static boolean isArticleTableEmpty() {
-        String url = "jdbc:sqlite:articles.db";
+
         String query = "SELECT COUNT(*) FROM articles";
         boolean isEmpty = false;
 
@@ -224,7 +272,7 @@ public class Database {
 
     // Method to update a user's preferences for an article
     public static void updateUserPreferences(int userID, Article article) {
-        String url = "jdbc:sqlite:articles.db";
+
         String insertSQL = "INSERT INTO preferences (userID, articleID, rating) VALUES (?, ?, ?)";
         String updateSQL = "UPDATE preferences SET rating = ? WHERE userID = ? AND articleID = ?";
 
@@ -263,8 +311,9 @@ public class Database {
 
     // Method to retrieve a user's preferences and match them to a list of articles
     public static List<Article> retrievePreferences(int userID, List<Article> articles) {
-        String url = "jdbc:sqlite:articles.db";
+
         String querySQL = "SELECT articleID, rating FROM preferences WHERE userID = ?";
+
         List<Article> preferences = new ArrayList<>(); // List to store articles with user preferences
 
         try (Connection conn = DriverManager.getConnection(url);
@@ -293,5 +342,152 @@ public class Database {
         }
 
         return preferences; // Return the list of articles with user preferences
+    }
+
+    public static User searchUser(String email) {
+        User user = null;
+
+        // Query to find the user based on the provided email
+        String query = "SELECT userID, password, username, loginType FROM users WHERE email = ?";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, email);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                // If a record is found, populate the user object and exit the loop
+                if (rs.next()) {
+                    user = new User(rs.getString("username"), email, rs.getString("password"), rs.getString("loginType"));
+                    user.setId(rs.getInt("userID"));
+                } else {
+                    System.out.println("       No account registered with this email. Please try again.");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("       An error occurred while accessing the database: " + e.getMessage());
+        }
+        return user;
+    }
+
+    // Inserts the email into the database and checks if it is unique
+    public boolean insertEmail(String email) {
+        String insertSQL = "INSERT INTO users (email, password, username, loginType) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
+
+            conn.setAutoCommit(false); // Start transaction
+
+            pstmt.setString(1, email);
+            pstmt.setString(2, ""); // Default empty password
+            pstmt.setString(3, ""); // Default empty username
+            pstmt.setString(4, ""); // Default empty loginType
+
+            pstmt.executeUpdate(); // Attempt to insert the email
+            conn.commit(); // Commit the transaction
+            return true; // Email inserted successfully
+
+        } catch (SQLException e) {
+            if (e.getMessage().contains("UNIQUE constraint failed")) {
+                // Email already exists in the database
+                return false;
+            }
+            System.out.println("Error inserting email: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Checks if the new email is unique in the database
+    public boolean isEmailUnique(String newEmail) {
+        String query = "SELECT email FROM users WHERE email = ?";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, newEmail);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return !rs.next(); // Return true if no matching email is found
+            }
+        } catch (SQLException e) {
+            System.out.println("     Error checking email: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Inserts a new article into the database
+    public void insertArticleToDatabase(Article article) {
+        String insertSQL = "INSERT INTO articles (headline, description, authors, category, predicted, url, date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
+
+            // Sets parameters for the prepared statement
+            pstmt.setString(1, article.getHeadline());
+            pstmt.setString(2, article.getDescription());
+            pstmt.setString(3, article.getAuthors());
+            pstmt.setString(4, article.getCategory());
+            pstmt.setString(5, article.getCategory());
+            pstmt.setString(6, article.getUrl());
+            pstmt.setString(7, article.getDate());
+            pstmt.executeUpdate(); // Executes the insertion query
+            System.out.println("\n     Article added successfully!");
+
+        } catch (SQLException e) {
+            System.out.println("     Error adding article: " + e.getMessage());
+        }
+
+        // Triggers categorization after article is added
+        ArticleCategorizer categorizer = new ArticleCategorizer();
+        categorizer.Categorize();
+    }
+
+    // Method to retrieve article from the database
+    public Article getArticle(int articleID) {
+        String selectSQL = "SELECT * FROM articles WHERE articleID = ?";
+        Article article = null;
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
+
+            pstmt.setInt(1, articleID);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    article = new Article(
+                            rs.getString("headline"),
+                            rs.getString("description"),
+                            rs.getString("authors"),
+                            rs.getString("predicted"),
+                            rs.getString("url"),
+                            rs.getString("date")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching article: " + e.getMessage());
+        }
+
+        return article;
+    }
+
+    // Updates the user's details in the database
+    public void updateUser(String prevEmail) {
+        String updateQuery = "UPDATE users SET username = ?, email = ?, password = ?, loginType = ? WHERE email = ?";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
+
+            // Bind the updated user details to the query
+            stmt.setString(1, this.user.getUsername());
+            stmt.setString(2, this.user.getEmail());
+            stmt.setString(3, this.user.getPassword());
+            stmt.setString(4, this.user.getLoginType());
+            stmt.setString(5, prevEmail);
+
+            stmt.executeUpdate(); // Execute the update query
+
+        } catch (SQLException e) {
+            System.out.println("     Error updating user: " + e.getMessage());
+        }
     }
 }

@@ -1,5 +1,7 @@
 package Account;
 
+import Database.Database;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class Login {
     private User user;
+    private Database database = new Database();
 
     // Getter method to retrieve the authenticated user object
     public User getUser() {
@@ -28,7 +31,6 @@ public class Login {
         System.out.println("                                                           Login to Existing Account                                                          ");
 
         Scanner scanner = new Scanner(System.in);
-        String url = "jdbc:sqlite:articles.db"; // Database connection string
 
         while (true) {
             System.out.print("\n     - Enter email: ");
@@ -40,25 +42,10 @@ public class Login {
                 continue;
             }
 
-            // Query to find the user based on the provided email
-            String query = "SELECT userID, password, username, loginType FROM users WHERE email = ?";
+            this.user = database.searchUser(email);
 
-            try (Connection conn = DriverManager.getConnection(url);
-                 PreparedStatement pstmt = conn.prepareStatement(query)) {
-
-                pstmt.setString(1, email);
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    // If a record is found, populate the user object and exit the loop
-                    if (rs.next()) {
-                        this.user = new User(rs.getString("username"), email, rs.getString("password"), rs.getString("loginType"));
-                        this.user.setId(rs.getInt("userID"));
-                        break;
-                    } else {
-                        System.out.println("       No account registered with this email. Please try again.");
-                    }
-                }
-            } catch (SQLException e) {
-                System.out.println("       An error occurred while accessing the database: " + e.getMessage());
+            if (user != null){
+                break;
             }
         }
 

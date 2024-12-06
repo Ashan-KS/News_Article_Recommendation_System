@@ -13,7 +13,6 @@ import Account.Signup;
 import Account.UpdateProfile;
 import Account.User;
 import Article.Article;
-import Article.FetchArticles;
 import Database.Database;
 import RecommendationEngine.RecommendationEngine;
 import java.util.*;
@@ -26,6 +25,7 @@ public class Client_Interface {
         User user = null; // User object to hold the logged-in user
         List<Article> articlesInput = null; // List for input articles
         List<Article> userHistory = null; // List to store user's reading history
+        Database database = new Database();
 
         Scanner scanner = new Scanner(System.in);
         try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
@@ -75,9 +75,8 @@ public class Client_Interface {
             // Show options for users after logging in
             if (loggedIn && "User".equalsIgnoreCase(user.getLoginType())) {
 
-                FetchArticles fetch = new FetchArticles();
-                List<Article> articles = fetch.fetchAllArticles();
-                articlesInput = fetch.getArticlesInput();
+                List<Article> articles = database.fetchAllArticles();
+                articlesInput = database.getArticlesInput();
 
                 while (true) { // Main menu loop for user options
                     System.out.println("===============================================================================================================================================");

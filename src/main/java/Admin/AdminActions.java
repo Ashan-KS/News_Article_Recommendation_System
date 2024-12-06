@@ -3,7 +3,9 @@ package Admin;
 import Account.User;
 import Article.Article;
 import Article.ArticleCategorizer;
+import Database.Database;
 
+import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.Scanner;
 
@@ -11,6 +13,7 @@ public class AdminActions {
 
     // Represents a class handling article management
     private User user;  // Stores the user associated with the session
+    private Database database = new Database();
     private static final Scanner scanner; // Shared scanner instance for user input
 
     // Sets the current user
@@ -71,7 +74,7 @@ public class AdminActions {
 
                         // Creates a new Article object
                         Article newArticle = new Article(headline, description, authors, category, url, date);
-                        this.insertArticleToDatabase(newArticle); // Inserts into database
+                        database.insertArticleToDatabase(newArticle); // Inserts into database
                         return;
                     }
                     System.out.println("     Error: Description cannot be empty!");
@@ -81,37 +84,8 @@ public class AdminActions {
         }
     }
 
-    // Inserts a new article into the database
-    private void insertArticleToDatabase(Article article) {
-        String url = "jdbc:sqlite:articles.db";
-        String insertSQL = "INSERT INTO articles (headline, description, authors, category, predicted, url, date) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
-
-            // Sets parameters for the prepared statement
-            pstmt.setString(1, article.getHeadline());
-            pstmt.setString(2, article.getDescription());
-            pstmt.setString(3, article.getAuthors());
-            pstmt.setString(4, article.getCategory());
-            pstmt.setString(5, article.getCategory());
-            pstmt.setString(6, article.getUrl());
-            pstmt.setString(7, article.getDate());
-            pstmt.executeUpdate(); // Executes the insertion query
-            System.out.println("\n     Article added successfully!");
-
-        } catch (SQLException e) {
-            System.out.println("     Error adding article: " + e.getMessage());
-        }
-
-        // Triggers categorization after article is added
-        ArticleCategorizer categorizer = new ArticleCategorizer();
-        categorizer.Categorize();
-    }
-
     // Deletes an article based on its ID
     public void deleteArticle() {
-        String url = "jdbc:sqlite:articles.db";
         System.out.println("\n===============================================================================================================================================");
         System.out.println("\n     --- Delete Article ---");
 
@@ -123,7 +97,7 @@ public class AdminActions {
                 System.out.print("     - Enter the Article ID you want to delete: ");
                 articleID = Integer.parseInt(scanner.nextLine().strip());
 
-                article = getArticle(articleID);
+                article = database.getArticle(articleID);
 
                 // Check if the article is null (not found)
                 if (article == null) {
@@ -150,26 +124,31 @@ public class AdminActions {
         }
 
         if (confirmation.equalsIgnoreCase("yes")) {
-            String deleteSQL = "DELETE FROM articles WHERE articleID = ?";
-
-            try (Connection conn = DriverManager.getConnection(url);
-                 PreparedStatement pstmtDelete = conn.prepareStatement(deleteSQL)) {
-
-                pstmtDelete.setInt(1, articleID); // Sets article ID for deletion
-                int rowsAffected = pstmtDelete.executeUpdate();
-
-                if (rowsAffected > 0) {
-                    System.out.println("\n     Article deleted successfully!\n");
-                } else {
-                    System.out.println("\n     Article deletion failed. No rows affected.");
-                }
-
-            } catch (SQLException e) {
-                System.out.println("     Error deleting article: " + e.getMessage());
-            }
-
+            deleteArticleEntry(articleID);
         } else {
             System.out.println("\n     Article deletion cancelled.");
+        }
+    }
+
+    public void deleteArticleEntry(int articleID) {
+        String url = "jdbc:sqlite:articles.db";
+
+        String deleteSQL = "DELETE FROM articles WHERE articleID = ?";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmtDelete = conn.prepareStatement(deleteSQL)) {
+
+            pstmtDelete.setInt(1, articleID); // Sets article ID for deletion
+            int rowsAffected = pstmtDelete.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("\n     Article deleted successfully!\n");
+            } else {
+                System.out.println("\n     Article deletion failed. No rows affected.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("     Error deleting article: " + e.getMessage());
         }
     }
 
@@ -181,35 +160,6 @@ public class AdminActions {
         System.out.println("     4. Category: " + article.getCategory());
         System.out.println("     5. URL: " + article.getUrl());
         System.out.println("     6. Date: " + article.getDate());
-    }
-
-    public Article getArticle(int articleID) {
-        String url = "jdbc:sqlite:articles.db";
-        String selectSQL = "SELECT * FROM articles WHERE articleID = ?";
-        Article article = null;
-
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
-
-            pstmt.setInt(1, articleID);
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    article = new Article(
-                            rs.getString("headline"),
-                            rs.getString("description"),
-                            rs.getString("authors"),
-                            rs.getString("predicted"),
-                            rs.getString("url"),
-                            rs.getString("date")
-                    );
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Error fetching article: " + e.getMessage());
-        }
-
-        return article;
     }
     public void editArticle() {
         String url = "jdbc:sqlite:articles.db";
@@ -224,7 +174,7 @@ public class AdminActions {
                 System.out.print("     - Enter the Article ID you want to edit: ");
                 articleID = Integer.parseInt(scanner.nextLine().strip());
 
-                article = getArticle(articleID);
+                article = database.getArticle(articleID);
 
                 // Check if the article is null (not found)
                 if (article == null) {

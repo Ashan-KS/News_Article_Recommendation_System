@@ -1,11 +1,14 @@
 package Account;
 
+import Database.Database;
+
 import java.sql.*;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Signup {
     private User user;
+    private Database database = new Database();
 
     // Setter method to assign the created user object
     public void setUser(User user) {
@@ -29,7 +32,6 @@ public class Signup {
         System.out.println("                                                                  New User Registration                                                        \n");
 
         Scanner scanner = new Scanner(System.in);
-        String dbUrl = "jdbc:sqlite:articles.db";
         String email;
 
         // Loop to ensure a valid and unique email is provided
@@ -43,7 +45,7 @@ public class Signup {
             }
 
             // Attempt to insert the email into the database
-            if (!insertEmail(email)) {
+            if (!database.insertEmail(email)) {
                 System.out.println("       This email is already taken by a user. Please enter a different email.\n");
                 continue;
             } else {
@@ -62,41 +64,12 @@ public class Signup {
 
         // Update user profile after registration
         UpdateProfile updateProfile = new UpdateProfile();
-        updateProfile.setUser(user);
-        updateProfile.updateUser(this.user.getEmail());
+        database.setUser(user);
+        database.updateUser(this.user.getEmail());
 
         // Registration success message
         System.out.println("\n                                                     Account Registered Successfully                                                         ");
         System.out.println("===============================================================================================================================================");
         System.out.println("                                                            Welcome " + user.getUsername());
-    }
-
-    // Inserts the email into the database and checks if it is unique
-    public boolean insertEmail(String email) {
-        String url = "jdbc:sqlite:articles.db";
-        String insertSQL = "INSERT INTO users (email, password, username, loginType) VALUES (?, ?, ?, ?)";
-
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
-
-            conn.setAutoCommit(false); // Start transaction
-
-            pstmt.setString(1, email);
-            pstmt.setString(2, ""); // Default empty password
-            pstmt.setString(3, ""); // Default empty username
-            pstmt.setString(4, ""); // Default empty loginType
-
-            pstmt.executeUpdate(); // Attempt to insert the email
-            conn.commit(); // Commit the transaction
-            return true; // Email inserted successfully
-
-        } catch (SQLException e) {
-            if (e.getMessage().contains("UNIQUE constraint failed")) {
-                // Email already exists in the database
-                return false;
-            }
-            System.out.println("Error inserting email: " + e.getMessage());
-            return false;
-        }
     }
 }

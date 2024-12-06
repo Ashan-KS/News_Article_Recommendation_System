@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4653d9e9-c705-42b6-b053-d3b2168f544b" name="Changes" comment="After Commenting">
+    <list default="true" id="4653d9e9-c705-42b6-b053-d3b2168f544b" name="Changes" comment="Almost final">
+      <change afterPath="$PROJECT_DIR$/Readme.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/ca4d78b9-ca0f-4a9e-839e-a15f3e071da9.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/ca4d78b9-ca0f-4a9e-839e-a15f3e071da9.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/articles.db" beforeDir="false" afterPath="$PROJECT_DIR$/articles.db" afterDir="false" />
@@ -12,10 +13,9 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/Account/Signup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Account/Signup.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Account/UpdateProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Account/UpdateProfile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Admin/AdminActions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Admin/AdminActions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Extra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Extra.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Article/FetchArticles.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Database/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Database/Database.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main/Client_Interface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main/Client_Interface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/RecommendationEngine/RecommendationEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/RecommendationEngine/RecommendationEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/View/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/View/View.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,6 +140,7 @@
       <workItem from="1733451398120" duration="3205000" />
       <workItem from="1733455320778" duration="4954000" />
       <workItem from="1733460445405" duration="290000" />
+      <workItem from="1733475829406" duration="2499000" />
     </task>
     <task id="LOCAL-00001" summary="Updated RecommendationEngine">
       <option name="closed" value="true" />
@@ -205,7 +206,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733395363556</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Almost final">
+      <option name="closed" value="true" />
+      <created>1733461519637</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1733461519637</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -261,30 +270,26 @@
     <MESSAGE value="resolving idea.xml" />
     <MESSAGE value="Client Interface updates" />
     <MESSAGE value="After Commenting" />
-    <option name="LAST_COMMIT_MESSAGE" value="After Commenting" />
+    <MESSAGE value="Almost final" />
+    <option name="LAST_COMMIT_MESSAGE" value="Almost final" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Database/Database.java</url>
-          <line>287</line>
+          <line>336</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Account/Signup.java</url>
-          <line>35</line>
+          <line>37</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Account/Signup.java</url>
-          <line>60</line>
+          <line>62</line>
           <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/Account/UpdateProfile.java</url>
-          <line>148</line>
-          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
