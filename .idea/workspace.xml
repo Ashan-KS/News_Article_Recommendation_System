@@ -4,19 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4653d9e9-c705-42b6-b053-d3b2168f544b" name="Changes" comment="After Commenting">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ca4d78b9-ca0f-4a9e-839e-a15f3e071da9.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/ca4d78b9-ca0f-4a9e-839e-a15f3e071da9.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/articles.db" beforeDir="false" afterPath="$PROJECT_DIR$/articles.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Account/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Account/Login.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Account/Signup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Account/Signup.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Account/UpdateProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Account/UpdateProfile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Admin/AdminActions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Admin/AdminActions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Extra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Extra.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main/Client_Interface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main/Client_Interface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/RecommendationEngine/RecommendationEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/RecommendationEngine/RecommendationEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/View/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/View/View.java" afterDir="false" />
-    </list>
+    <list default="true" id="4653d9e9-c705-42b6-b053-d3b2168f544b" name="Changes" comment="Almost final" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -44,38 +32,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Application.Client.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Client_Interface.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Driver.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Extra.executor&quot;: &quot;Run&quot;,
-    &quot;Application.RecommendationEngine.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Server.executor&quot;: &quot;Run&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ashan/IdeaProjects/oop_lec&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.uml&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Application.Client.executor": "Run",
+    "Application.Client_Interface.executor": "Run",
+    "Application.Driver.executor": "Run",
+    "Application.Extra.executor": "Run",
+    "Application.RecommendationEngine.executor": "Run",
+    "Application.Server.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "Merging master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/ashan/IdeaProjects/oop_lec",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.uml",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\ashan\IdeaProjects\OOP" />
@@ -261,7 +249,8 @@
     <MESSAGE value="resolving idea.xml" />
     <MESSAGE value="Client Interface updates" />
     <MESSAGE value="After Commenting" />
-    <option name="LAST_COMMIT_MESSAGE" value="After Commenting" />
+    <MESSAGE value="Almost final" />
+    <option name="LAST_COMMIT_MESSAGE" value="Almost final" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
