@@ -1,4 +1,4 @@
-Instructions for Setting Up the Recommendation Function
+##Instructions for Setting Up the Recommendation Function
 To ensure the Recommendations function works as intended, follow these steps to install and configure the necessary components:
 
 1. Download and Install Ollama
