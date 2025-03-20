@@ -42,8 +42,6 @@ To start the system:
 1. **Run the Server.java**
 2. **Run the Client_Interface.java**
 
-This will initialize the necessary services, including the **Recommendation Function**.
-
 ---
 
 ## Configuration
