@@ -39,14 +39,9 @@ Once the model is installed, make sure **Ollama is running in the background** f
 ## Running the Program
 To start the system:
 
-1. **Run the Server**
-   ```bash
-   python server.py
-   ```
-2. **Run the Client**
-   ```bash
-   python client.py
-   ```
+1. **Run the Server.java**
+2. **Run the Client_Interface.java**
+
 This will initialize the necessary services, including the **Recommendation Function**.
 
 ---
